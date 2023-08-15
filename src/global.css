@@ -1,0 +1,15 @@
+@font-face {
+  font-family: "montserrat";
+  src: url("./assets/fonts/Montserrat-VariableFont_wght.ttf");
+  font-weight: normal;
+  font-style: normal;
+}
+
+*{
+    font-family: "montserrat";
+}
+
+
+ion-item{
+  background: blue 
+}

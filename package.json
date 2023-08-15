@@ -19,13 +19,21 @@
     "@capacitor/status-bar": "5.0.6",
     "@ionic/react": "^7.0.0",
     "@ionic/react-router": "^7.0.0",
+    "@ionic/storage": "^4.0.0",
+    "@tanstack/react-query": "^4.32.6",
     "@types/react-router": "^5.1.20",
     "@types/react-router-dom": "^5.3.3",
+    "bootstrap": "^5.3.1",
     "ionicons": "^7.0.0",
+    "localforage": "^1.10.0",
+    "localforage-cordovasqlitedriver": "^1.8.0",
+    "pocketbase": "^0.16.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
+    "react-hook-form": "^7.45.4",
     "react-router": "^5.3.4",
-    "react-router-dom": "^5.3.4"
+    "react-router-dom": "^5.3.4",
+    "recoil": "^0.7.7"
   },
   "devDependencies": {
     "@capacitor/cli": "5.2.3",
