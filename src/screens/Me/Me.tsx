@@ -15,6 +15,8 @@ import {
 import React, { useState } from "react";
 import HeaderTitle from "../../components/HeaderTitle/HeaderTitle";
 import {
+  idCardOutline,
+  languageOutline,
   logOutOutline,
   personCircle,
   phonePortraitOutline,
@@ -108,7 +110,7 @@ const Me = () => {
           <IonList className="mt-3" lines="full">
             {/* TODO: hide if anonymous */}
             <IonItem routerDirection="forward" routerLink="/profile_info">
-              <IonIcon icon={personCircle} slot="start" />
+              <IonIcon icon={idCardOutline} slot="start" />
               <IonLabel>Profile Info</IonLabel>
             </IonItem>
             <IonItem>
@@ -118,6 +120,10 @@ const Me = () => {
             <IonItem onClick={() => setShowContactlert(true)}>
               <IonIcon icon={phonePortraitOutline} slot="start" />
               <IonLabel color={"primary"}>Contact Us</IonLabel>
+            </IonItem>
+            <IonItem>
+              <IonIcon icon={languageOutline} slot="start" />
+              <IonLabel color={"primary"}>Language</IonLabel>
             </IonItem>
 
             {/* TODO: hide if anonymous */}

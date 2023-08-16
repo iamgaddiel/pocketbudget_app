@@ -19,7 +19,7 @@ interface TransactionItemPrams {
   title: string;
   timestamp: string;
   category: TransactionCaegory;
-  amount: string;
+  amount: number;
 }
 
 const TransactionItem: React.FC<TransactionItemPrams> = ({

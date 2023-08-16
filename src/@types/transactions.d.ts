@@ -20,7 +20,7 @@ export interface Transaction {
   timestamp: string;
   title: string;
   description?: string;
-  amount: string
+  amount: number
 }
 
 

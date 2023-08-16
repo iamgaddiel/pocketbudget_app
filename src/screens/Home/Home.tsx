@@ -2,6 +2,7 @@ import {
   IonContent,
   IonHeader,
   IonIcon,
+  IonItem,
   IonList,
   IonPage,
   IonRouterLink,
@@ -10,21 +11,97 @@ import {
   IonToolbar,
 } from "@ionic/react";
 import { add, chevronForward, menu, personCircleOutline } from "ionicons/icons";
-import { useEffect } from "react";
+import { useCallback, useEffect, useState } from "react";
 
 import ChartLine from "../../assets/images/chartline.png";
-import { useRecoilValue, useSetRecoilState } from "recoil";
+import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 import { utilsAtom } from "../../atoms/utilityAtom";
 import TransactionItem from "../../components/TransactionItem/TransactionItem";
-import { transactionsDemoAtom } from "../../atoms/transactionAtom";
+import {
+  transactionsAtom,
+  demoTransactionAtom,
+} from "../../atoms/transactionAtom";
+import { getSaveData, saveData } from "../../helpers/storageSDKs";
+import { TRANSACTIONS } from "../../helpers/keys";
+import { Transaction } from "../../@types/transactions";
+
+
+
+
 
 const Home = () => {
   const setShowTabs = useSetRecoilState(utilsAtom);
-  const transactions = useRecoilValue(transactionsDemoAtom); // TODO: Not more than 4 transactions
+  const [transactions, setAppTransactionsState] = useRecoilState(transactionsAtom);
+
+  
+  const totalIncome = useCallback(getTotalTransactionIcome, [])();
+  const totalExpenses = useCallback(getTotalTransactionExpense, [])();
+  const totalBalance = useCallback(getTotalBalance, [
+    totalIncome,
+    totalExpenses,
+  ])();
+
+
+
+
+  useEffect(() => {
+    loadTransactions();
+  }, []);
 
   useEffect(() => {
     setShowTabs({ showTabs: true });
   }, []);
+
+
+
+  /**
+   * Gets transactions from DB if avaiable, if trasnactions return null creates an array of trsnactions: Transaction[]
+   * @returns transactions[] | []
+   */
+  async function getOrCreateTransactions(): Promise<Transaction[]> {
+    const storedTransactions = (await getSaveData(TRANSACTIONS)) as Transaction[];
+    if (storedTransactions === null) {
+      saveData(TRANSACTIONS, []);
+      return [];
+    }
+    return storedTransactions;
+  }
+
+  async function loadTransactions() {
+    const transactions = await getOrCreateTransactions();
+    setAppTransactionsState(transactions);
+  }
+
+  /**
+   * Gets all income transactions and returns thier sum or zero (0) no transactions are found
+   * @returns income
+   */
+  function getTotalTransactionIcome(): number {
+    // check if transactions are empty
+    if (transactions.length < 1) return 0;
+
+    const income = transactions
+      .filter((transaction) => transaction.type === "income")
+      .map((transaction) => transaction.amount)
+      .reduce((prevValue, currentValue) => prevValue + currentValue, 0);
+    return income;
+  }
+
+  /**
+   * Gets all expense transactions and returns thier sum or zero (0) no transactions are found
+   * @returns expense
+   */
+  function getTotalTransactionExpense(): number {
+    const expense = transactions
+      .filter((transaction) => transaction.type === "expense")
+      .map((transaction) => transaction.amount)
+      .reduce((prevValue, currentValue) => prevValue + currentValue, 0);
+    return expense;
+  }
+
+  function getTotalBalance(): number {
+    return totalIncome + totalIncome;
+  }
 
   return (
     <IonPage>
@@ -33,7 +110,7 @@ const Home = () => {
           {/* <IonIcon icon={menu} slot="start" size="large" /> */}
           <IonTitle className="">
             {/* diplay "Welcome Anonymous" if anonymous */}
-            Welcome, Gaddiel Ighota
+            Welcome anonymous
           </IonTitle>
           <IonIcon
             icon={personCircleOutline}
@@ -50,7 +127,7 @@ const Home = () => {
           <div style={bannerContent} className="ion-padding text-center">
             <span className="text-light">Current Balance</span>
             <h1 className="text-center text-light fw-3">
-              <strong>$130,549,450,000.000</strong>
+              <strong>${totalBalance}</strong>
             </h1>
           </div>
         </section>
@@ -66,7 +143,7 @@ const Home = () => {
             </IonText>{" "}
             <br />
             <IonText color={"success"} className="fs-4 fw-4">
-              <strong>$300,000.00</strong>
+              <strong>${totalIncome}</strong>
               <br />
             </IonText>
           </div>
@@ -77,7 +154,7 @@ const Home = () => {
             </IonText>{" "}
             <br />
             <IonText color={"danger"} className="fs-4 fw-4">
-              <strong>$300,000.00</strong>
+              <strong>${totalExpenses}</strong>
               <br />
             </IonText>
           </div>
@@ -128,19 +205,28 @@ const Home = () => {
 
           {/* Income List */}
           <IonList lines="none" className="ion-margin-top">
-            {transactions.map((item) => (
-              <>
-                {item.type === "income" ? (
-                  <TransactionItem
-                    amount={item.amount}
-                    category={item.category}
-                    timestamp={item.timestamp}
-                    title={item.title}
-                    type={item.type}
-                  />
-                ) : null}
-              </>
-            ))}
+            {transactions.length > 0 ? (
+              transactions
+                .filter((t) => t.type === "income")
+                .map((item) => (
+                  <>
+                    {item.type === "income" ? (
+                      <TransactionItem
+                        amount={item.amount}
+                        category={item.category}
+                        timestamp={item.timestamp}
+                        title={item.title}
+                        type={item.type}
+                        key={item.id}
+                      />
+                    ) : null}
+                  </>
+                ))
+            ) : (
+              <IonText className="text-muted p-2">
+                <small>No income yet</small>
+              </IonText>
+            )}
           </IonList>
         </section>
 
@@ -148,6 +234,7 @@ const Home = () => {
         <section className="ion-padding mt-4">
           <div className="d-flex justify-content-between align-items-center">
             <strong>Expense</strong>
+
             <IonRouterLink
               routerLink="/transaction/expense/4"
               routerDirection="forward"
@@ -162,19 +249,28 @@ const Home = () => {
 
           {/* Income List */}
           <IonList lines="none" className="ion-margin-top">
-            {transactions.map((item) => (
-              <>
-                {item.type === "expense" ? (
-                  <TransactionItem
-                    amount={item.amount}
-                    category={item.category}
-                    timestamp={item.timestamp}
-                    title={item.title}
-                    type={item.type}
-                  />
-                ) : null}
-              </>
-            ))}
+            {transactions.length > 0 ? (
+              transactions
+                .filter((t) => t.type === "expense")
+                .map((item) => (
+                  <>
+                    {item.type === "expense" ? (
+                      <TransactionItem
+                        amount={item.amount}
+                        category={item.category}
+                        timestamp={item.timestamp}
+                        title={item.title}
+                        type={item.type}
+                        key={item.id}
+                      />
+                    ) : null}
+                  </>
+                ))
+            ) : (
+              <IonText className="text-muted p-2">
+                <small>No expenses yet</small>
+              </IonText>
+            )}
           </IonList>
         </section>
       </IonContent>
@@ -200,7 +296,7 @@ const bannerContent = {
 
 const counterDashboard = {
   backgroundColor: "var(--ion-color-light)",
-  marginTop: "-230px",
+  marginTop: "-290px",
   width: "90vw",
   height: "20vh",
 };
@@ -210,5 +306,5 @@ const counterDashboard2 = {
   width: "90vw",
   height: "7vh",
   marginLeft: "auto",
-  marginRight: "auto"
+  marginRight: "auto",
 };

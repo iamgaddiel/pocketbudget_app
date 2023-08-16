@@ -1,8 +1,9 @@
 import { atom } from "recoil";
 import { Transaction } from "../@types/transactions";
+import { TRANSACTIONS } from "../helpers/keys";
 
-export const transactionsDemoAtom = atom<Transaction[]>({
-    key: "TRANSACTION",
+export const demoTransactionAtom = atom<Transaction[]>({
+    key: "TRANSACTION_DEMO",
     default: [
         {
           id: 1,
@@ -10,7 +11,7 @@ export const transactionsDemoAtom = atom<Transaction[]>({
           type: "expense",
           timestamp: "23:132:23",
           title: "Childrens School Fees",
-          amount: "343,232.34",
+          amount: 233404,
         },
         {
           id: 2,
@@ -18,7 +19,7 @@ export const transactionsDemoAtom = atom<Transaction[]>({
           type: "income",
           timestamp: "23:132:23",
           title: "Childrens School Fees",
-          amount: "343,000.34",
+          amount: 384934,
         },
         {
           id: 3,
@@ -26,7 +27,7 @@ export const transactionsDemoAtom = atom<Transaction[]>({
           type: "income",
           timestamp: "23:132:23",
           title: "Childrens School Fees",
-          amount: "234,670.34",
+          amount: 349494,
         },
         {
           id: 4,
@@ -34,7 +35,14 @@ export const transactionsDemoAtom = atom<Transaction[]>({
           type: "income",
           timestamp: "23:132:23",
           title: "Childrens School Fees",
-          amount: "345,345.34",
+          amount: 203945,
         },
       ]
 })
+
+export const transactionsAtom = atom<Transaction[]>({
+    key: TRANSACTIONS,
+    default: []
+})
+
+

@@ -3,11 +3,11 @@ import HeaderTitle from "../../components/HeaderTitle/HeaderTitle";
 import { IonContent, IonList, IonPage } from "@ionic/react";
 import { calendarOutline } from "ionicons/icons";
 import { useRecoilValue } from "recoil";
-import { transactionsDemoAtom } from "../../atoms/transactionAtom";
+import { demoTransactionAtom } from "../../atoms/transactionAtom";
 import TransactionItem from "../../components/TransactionItem/TransactionItem";
 
 const History = () => {
-  const transactions = useRecoilValue(transactionsDemoAtom);
+  const transactions = useRecoilValue(demoTransactionAtom);
   return (
     <IonPage>
       <HeaderTitle title="History" icon={calendarOutline} className="py-2" />

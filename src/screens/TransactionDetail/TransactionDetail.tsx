@@ -15,11 +15,11 @@ import { useParams } from "react-router";
 import { TrasctionDetailParam } from "../../@types/transactions";
 import TransactionItem from "../../components/TransactionItem/TransactionItem";
 import { useRecoilValue } from "recoil";
-import { transactionsDemoAtom } from "../../atoms/transactionAtom";
+import {  demoTransactionAtom } from "../../atoms/transactionAtom";
 
 function TransactionDetail() {
   const { transactionType, trasactionId } = useParams<TrasctionDetailParam>();
-  const transactions = useRecoilValue(transactionsDemoAtom);
+  const transactions = useRecoilValue(demoTransactionAtom);
 
   //   const BIBLE = "2peter 3:9"
   // const PRAy_like_this_30_tile  = pray fisrt (then prophesy)

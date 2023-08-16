@@ -11,3 +11,6 @@ export const USRS_COLLECTION = "users"
 export const USER = 'user'
 export const LAUNCH_STATUS = 'launchAppStatus'
 export const APP_CONFIG = 'app_config'
+export const TRANSACTIONS = 'transactions'
+export const BUDGETS = 'budgets'
+export const BUDGET_ITEMS = 'budget_items'
