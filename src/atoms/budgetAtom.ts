@@ -1,5 +1,6 @@
 import { atom } from "recoil";
-import { BudgetItem } from "../@types/budget";
+import { Budget, BudgetItem } from "../@types/budget";
+import { BUDGETS, BUDGET_ITEMS } from "../helpers/keys";
 
 
 export const budgetDemoAtom = atom<BudgetItem[]>({
@@ -11,6 +12,9 @@ export const budgetDemoAtom = atom<BudgetItem[]>({
             created: "12:00pm",
             transactionType: "expense",
             updated: "",
+            budget: "",
+            is_complete: false,
+            aditional_decription: '',
             amount: "344,000"
         },
         {
@@ -19,6 +23,9 @@ export const budgetDemoAtom = atom<BudgetItem[]>({
             created: "12:00pm",
             transactionType: "expense",
             updated: "",
+            budget: "",
+            is_complete: false,
+            aditional_decription: '',
             amount: "344,000"
         },
         {
@@ -27,6 +34,9 @@ export const budgetDemoAtom = atom<BudgetItem[]>({
             created: "12:00pm",
             transactionType: "expense",
             updated: "",
+            budget: "",
+            is_complete: false,
+            aditional_decription: '',
             amount: "344,000"
         },
         {
@@ -35,6 +45,9 @@ export const budgetDemoAtom = atom<BudgetItem[]>({
             created: "12:00pm",
             transactionType: "expense",
             updated: "",
+            budget: "",
+            is_complete: false,
+            aditional_decription: '',
             amount: "344,000"
         },
         {
@@ -43,6 +56,9 @@ export const budgetDemoAtom = atom<BudgetItem[]>({
             created: "12:00pm",
             transactionType: "expense",
             updated: "",
+            budget: "",
+            is_complete: false,
+            aditional_decription: '',
             amount: "344,000"
         },
         {
@@ -51,6 +67,9 @@ export const budgetDemoAtom = atom<BudgetItem[]>({
             created: "12:00pm",
             transactionType: "expense",
             updated: "",
+            budget: "",
+            is_complete: false,
+            aditional_decription: '',
             amount: "344,000"
         },
         {
@@ -59,6 +78,9 @@ export const budgetDemoAtom = atom<BudgetItem[]>({
             created: "12:00pm",
             transactionType: "expense",
             updated: "",
+            budget: "",
+            is_complete: false,
+            aditional_decription: '',
             amount: "344,000"
         },
         {
@@ -67,6 +89,9 @@ export const budgetDemoAtom = atom<BudgetItem[]>({
             created: "12:00pm",
             transactionType: "expense",
             updated: "",
+            budget: "",
+            is_complete: false,
+            aditional_decription: '',
             amount: "344,000"
         },
         {
@@ -75,6 +100,9 @@ export const budgetDemoAtom = atom<BudgetItem[]>({
             created: "12:00pm",
             transactionType: "expense",
             updated: "",
+            budget: "",
+            is_complete: false,
+            aditional_decription: '',
             amount: "344,000"
         },
         {
@@ -83,6 +111,9 @@ export const budgetDemoAtom = atom<BudgetItem[]>({
             created: "12:00pm",
             transactionType: "expense",
             updated: "",
+            budget: "",
+            is_complete: false,
+            aditional_decription: '',
             amount: "344,000"
         },
         {
@@ -91,7 +122,20 @@ export const budgetDemoAtom = atom<BudgetItem[]>({
             created: "12:00pm",
             transactionType: "expense",
             updated: "",
+            budget: "",
+            is_complete: false,
+            aditional_decription: '',
             amount: "344,000"
         },
     ]
+})
+
+export const budgetAtom = atom<Budget[]>({
+    key: BUDGETS,
+    default: []
+})
+
+export const budgetItemAtom = atom<BudgetItem[]>({
+    key: BUDGET_ITEMS,
+    default: []
 })

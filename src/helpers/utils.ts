@@ -2,17 +2,18 @@ import { format } from "date-fns";
 import { getApiCollectionItem, listApiCollection } from "./apiHelpers";
 import { v4 as uuid4 } from 'uuid'
 import { Transaction } from "../@types/transactions";
-import { TRANSACTIONS } from "./keys";
+import { BUDGETS, TRANSACTIONS } from "./keys";
 import { getSaveData, saveData } from "./storageSDKs";
+import { Budget, BudgetItem } from "../@types/budget";
 
 
 
 
 
- /**
-   * Gets transactions from DB if avaiable, if trasnactions return null creates an array of trsnactions: Transaction[]
-   * @returns transactions[] | []
-   */
+/**
+  * Gets transactions from DB if avaiable, if trasnactions return null creates an array of trsnactions: Transaction[]
+  * @returns transactions[] | []
+  */
 export async function getOrCreateTransactions(): Promise<Transaction[]> {
   const storedTransactions = (await getSaveData(TRANSACTIONS)) as Transaction[];
   if (storedTransactions === null) {
@@ -22,12 +23,38 @@ export async function getOrCreateTransactions(): Promise<Transaction[]> {
   return storedTransactions;
 }
 
+/**
+  * Gets budgets from DB if avaiable, if trasnactions return null creates an array of budget: Budget[]
+  * @returns Budget[] | []
+  */
+export async function getOrCreateBudget(): Promise<Budget[]> {
+  const soredBudgets = (await getSaveData(BUDGETS)) as Budget[];
+  if (soredBudgets === null) {
+    saveData(BUDGETS, []);
+    return [];
+  }
+  return soredBudgets;
+}
+
+/**
+  * Gets budgets from DB if avaiable, if trasnactions return null creates an array of budgetItems: BudgetItem[]
+  * @returns BudgetItem[] | []
+  */
+export async function getOrCreateBudgetItem(): Promise<BudgetItem[]> {
+  const soredBudgetItems = (await getSaveData(BUDGETS)) as BudgetItem[];
+  if (soredBudgetItems === null) {
+    saveData(TRANSACTIONS, []);
+    return [];
+  }
+  return soredBudgetItems;
+}
+
 
 /**
  * Returns UUID string
  * @returns 
  */
-export function getUUIDString(): string{
+export function getUUIDString(): string {
   return uuid4()
 }
 

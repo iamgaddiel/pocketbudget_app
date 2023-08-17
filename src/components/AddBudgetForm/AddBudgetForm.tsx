@@ -3,16 +3,22 @@ import React, { useReducer } from 'react'
 import { addBudgetReducer } from '../../reducer/reducers/budgetReducer'
 import { SET_BUDGET_DEADLINE, SET_BUDGET_TITLE, SET_INITIAL_BUDGET } from '../../reducer/actions/AddBudgetAtions'
 import { ModalParam } from '../../@types/componetsPrams'
+import { Budget } from '../../@types/budget'
+import { getSaveData, saveData } from '../../helpers/storageSDKs'
+import { BUDGETS } from '../../helpers/keys'
+import { useSetRecoilState } from 'recoil'
+import { budgetAtom } from '../../atoms/budgetAtom'
 
 
 
 
 const AddBudgetForm: React.FC<ModalParam> = ({ isOpen, setIsOpen}) => {
+  const setBudgets = useSetRecoilState(budgetAtom)
     const [state, setState] = useReducer(addBudgetReducer, {
         title: "",
         timestamp: "sfsdfsdf",
         is_complete: false,
-        deadline: "",
+        deadline: 0,
         initialBudget: "3000"
     })
 
@@ -21,6 +27,18 @@ const AddBudgetForm: React.FC<ModalParam> = ({ isOpen, setIsOpen}) => {
         e.preventDefault()
         
         //TODO: submit form
+        const formData: Budget = {
+          ...state,
+          deadline: new Date(state.deadline).getTime(),
+          is_complete: false,
+          id: new Date().getTime()
+        }
+
+        const budgets = await getSaveData(BUDGETS) as Budget[]
+        const newBudgets = [...budgets, formData]
+        saveData(BUDGETS, newBudgets)
+        setBudgets(newBudgets)
+        setIsOpen(false)
     }
 
   return (

@@ -70,11 +70,14 @@ function reducer(state: FormField, { payload, type }: Action) {
 }
 
 const AddTransaction = () => {
+  // [usePrams] ---------------------------------------------------------------------
   const { transactionType } = useParams<{
     transactionType: "income" | "expense";
   }>();
+  // [history] ---------------------------------------------------------------------
   const history = useHistory();
 
+  // [reducers] ---------------------------------------------------------------------
   const [formFields, setFormFields] = useReducer(reducer, {
     amount: 0,
     title: "",
@@ -82,12 +85,14 @@ const AddTransaction = () => {
     description: "",
   });
 
+  // [recoil] ---------------------------------------------------------------------
   const [currentTransactionsState, setTransactionState] =
     useRecoilState(transactionsAtom);
 
-    const [isLoading, setIsLoading] = useState(false)
+  // [useState] ---------------------------------------------------------------------
+  const [isLoading, setIsLoading] = useState(false);
 
-
+  // [functions] ---------------------------------------------------------------------
   async function handleFormSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     setIsLoading(true);
@@ -133,7 +138,7 @@ const AddTransaction = () => {
         <IonLoading
           isOpen={isLoading}
           message={"Saving..."}
-          onDidDismiss={() => history.push('/')}
+          onDidDismiss={() => history.push("/")}
         />
         <form onSubmit={handleFormSubmit}>
           {/* Title */}
