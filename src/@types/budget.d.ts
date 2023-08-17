@@ -1,4 +1,4 @@
-import { TransactionType } from "./transactions"
+import { TransactionCaegory } from "./transactions"
 
 
 type BudgetCategory = "urgent" | "needed" | "important" | "whishlist"
@@ -15,12 +15,12 @@ export interface Budget{
 export interface BudgetItem{
     id?: string
     title: string
-    amount: string
+    amount: number
     category: BudgetCategory
-    transactionType: TransactionType
-    budget: string
-    created: string,
-    updated: string
-    is_complete: boolean
+    type: TransactionCaegory
     aditional_decription: string
+    budget?: string
+    created?: number,
+    updated?: number
+    is_complete?: boolean
 }

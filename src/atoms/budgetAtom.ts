@@ -10,122 +10,122 @@ export const budgetDemoAtom = atom<BudgetItem[]>({
             title: "Buy Car",
             category: "urgent",
             created: "12:00pm",
-            transactionType: "expense",
+            type: "food",
             updated: "",
             budget: "",
             is_complete: false,
             aditional_decription: '',
-            amount: "344,000"
+            amount: 1000
         },
         {
             title: "Buy Car",
             category: "urgent",
             created: "12:00pm",
-            transactionType: "expense",
+            type: "food",
             updated: "",
             budget: "",
             is_complete: false,
             aditional_decription: '',
-            amount: "344,000"
+            amount: 1000
         },
         {
             title: "fill gas",
             category: "urgent",
             created: "12:00pm",
-            transactionType: "expense",
+            type: "food",
             updated: "",
             budget: "",
             is_complete: false,
             aditional_decription: '',
-            amount: "344,000"
+            amount: 1000
         },
         {
             title: "Get Ipad",
             category: "needed",
             created: "12:00pm",
-            transactionType: "expense",
+            type: "food",
             updated: "",
             budget: "",
             is_complete: false,
             aditional_decription: '',
-            amount: "344,000"
+            amount: 1000
         },
         {
             title: "Buy TV",
             category: "whishlist",
             created: "12:00pm",
-            transactionType: "expense",
+            type: "food",
             updated: "",
             budget: "",
             is_complete: false,
             aditional_decription: '',
-            amount: "344,000"
+            amount: 1000
         },
         {
             title: "Buy a Gasoline Generator",
             category: "needed",
             created: "12:00pm",
-            transactionType: "expense",
+            type: "food",
             updated: "",
             budget: "",
             is_complete: false,
             aditional_decription: '',
-            amount: "344,000"
+            amount: 1000
         },
         {
             title: "Go shoping",
             category: "important",
             created: "12:00pm",
-            transactionType: "expense",
+            type: "food",
             updated: "",
             budget: "",
             is_complete: false,
             aditional_decription: '',
-            amount: "344,000"
+            amount: 1000
         },
         {
             title: "Pay Debt",
             category: "needed",
             created: "12:00pm",
-            transactionType: "expense",
+            type: "food",
             updated: "",
             budget: "",
             is_complete: false,
             aditional_decription: '',
-            amount: "344,000"
+            amount: 1000
         },
         {
             title: "Go on a vacation",
             category: "needed",
             created: "12:00pm",
-            transactionType: "expense",
+            type: "food",
             updated: "",
             budget: "",
             is_complete: false,
             aditional_decription: '',
-            amount: "344,000"
+            amount: 1000
         },
         {
             title: "Own a house",
             category: "whishlist",
             created: "12:00pm",
-            transactionType: "expense",
+            type: "food",
             updated: "",
             budget: "",
             is_complete: false,
             aditional_decription: '',
-            amount: "344,000"
+            amount: 1000
         },
         {
             title: "Hmmmmm",
             category: "whishlist",
             created: "12:00pm",
-            transactionType: "expense",
+            type: "food",
             updated: "",
             budget: "",
             is_complete: false,
             aditional_decription: '',
-            amount: "344,000"
+            amount: 1000
         },
     ]
 })

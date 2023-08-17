@@ -18,6 +18,7 @@ import {
   idCardOutline,
   languageOutline,
   logOutOutline,
+  logoEuro,
   personCircle,
   phonePortraitOutline,
   shareOutline,
@@ -122,8 +123,8 @@ const Me = () => {
               <IonLabel color={"primary"}>Contact Us</IonLabel>
             </IonItem>
             <IonItem>
-              <IonIcon icon={languageOutline} slot="start" />
-              <IonLabel color={"primary"}>Language</IonLabel>
+              <IonIcon icon={logoEuro} slot="start" />
+              <IonLabel color={"primary"}>Currency</IonLabel>
             </IonItem>
 
             {/* TODO: hide if anonymous */}

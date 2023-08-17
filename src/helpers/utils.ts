@@ -2,7 +2,7 @@ import { format } from "date-fns";
 import { getApiCollectionItem, listApiCollection } from "./apiHelpers";
 import { v4 as uuid4 } from 'uuid'
 import { Transaction } from "../@types/transactions";
-import { BUDGETS, TRANSACTIONS } from "./keys";
+import { BUDGETS, BUDGET_ITEMS, TRANSACTIONS } from "./keys";
 import { getSaveData, saveData } from "./storageSDKs";
 import { Budget, BudgetItem } from "../@types/budget";
 
@@ -41,9 +41,9 @@ export async function getOrCreateBudget(): Promise<Budget[]> {
   * @returns BudgetItem[] | []
   */
 export async function getOrCreateBudgetItem(): Promise<BudgetItem[]> {
-  const soredBudgetItems = (await getSaveData(BUDGETS)) as BudgetItem[];
+  const soredBudgetItems = (await getSaveData(BUDGET_ITEMS)) as BudgetItem[];
   if (soredBudgetItems === null) {
-    saveData(TRANSACTIONS, []);
+    saveData(BUDGET_ITEMS, []);
     return [];
   }
   return soredBudgetItems;

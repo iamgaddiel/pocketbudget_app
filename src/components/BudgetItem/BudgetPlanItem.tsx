@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { BudgetCategory, BudgetItem } from "../../@types/budget";
 import {
   IonItem,
@@ -11,11 +11,13 @@ import {
 } from "@ionic/react";
 import { optionsOutline, ribbonOutline, trash } from "ionicons/icons";
 import EditPlanModal from "../EditPlanModal/EditPlanModal";
+import { useRecoilState } from "recoil";
+import { budgetItemAtom } from "../../atoms/budgetAtom";
 
 interface Prop {
   category: BudgetCategory | "all";
   title: string;
-  amount: string;
+  amount: number;
   is_complete: boolean;
   budgetPlan: BudgetItem
 }
@@ -28,6 +30,7 @@ const BudgetPlanItem: React.FC<Prop> = ({
   budgetPlan
 }) => {
   const [openEditModal, setOpenEditModal] = useState(false)
+
 
 
 

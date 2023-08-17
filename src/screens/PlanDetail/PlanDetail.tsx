@@ -12,13 +12,14 @@ import {
   IonToolbar,
 } from "@ionic/react";
 import { useParams } from "react-router";
-import { useRecoilValue } from "recoil";
-import { useState } from "react";
+import { useRecoilState, useRecoilValue } from "recoil";
+import { useEffect, useState } from "react";
 import { BudgetCategory } from "../../@types/budget";
-import { budgetDemoAtom } from "../../atoms/budgetAtom";
+import { budgetDemoAtom, budgetItemAtom } from "../../atoms/budgetAtom";
 import CreatePlanMdal from "../../components/CreatePlanMdal/CreatePlanMdal";
 import BudgetPlanItem from "../../components/BudgetItem/BudgetPlanItem";
 import { createOutline } from "ionicons/icons";
+import { getOrCreateBudgetItem } from "../../helpers/utils";
 
 const PlanDetail = () => {
   const { budgetTitle, budgetId } = useParams<{
@@ -26,10 +27,19 @@ const PlanDetail = () => {
     budgetId: string;
   }>();
 
+  const [budgetItems, setBudgetItems] = useRecoilState(budgetItemAtom);
+
   const [category, setCategory] = useState<BudgetCategory | "all">("all");
   const budgets = useRecoilValue(budgetDemoAtom);
 
   const [openCreateModal, setCrateModal] = useState(false);
+
+  useEffect(() => {
+    (async () => {
+      const loadedBudgetItems = await getOrCreateBudgetItem();
+      setBudgetItems(loadedBudgetItems);
+    })();
+  }, []);
 
   return (
     <IonPage>
@@ -53,8 +63,9 @@ const PlanDetail = () => {
           <IonTitle></IonTitle>
         </section>
 
+
         <IonList lines="none" className="ion-margin-top">
-          {budgets.map((item) => (
+          {budgetItems.map((item) => (
             <>
               {item.category === category ? (
                 <BudgetPlanItem
@@ -63,12 +74,12 @@ const PlanDetail = () => {
                   title={item.title}
                   is_complete={false}
                   budgetPlan={item}
-                  />
-                  ) : null}
+                />
+              ) : null}
 
               {category === "all" ? (
                 <BudgetPlanItem
-                amount={item.amount}
+                  amount={item.amount}
                   category={item.category}
                   title={item.title}
                   is_complete={false}
@@ -79,9 +90,11 @@ const PlanDetail = () => {
           ))}
         </IonList>
 
+        {/* ========================= [Add Budget Item Modal Start] ================================= */}
         <section className="modal">
-          <CreatePlanMdal isOpen={openCreateModal} setIsOpen={setCrateModal} />
+          <CreatePlanMdal isOpen={openCreateModal} setIsOpen={setCrateModal} budgetId={budgetId} />
         </section>
+        {/* ========================= [Add Budget Item Modal Stop] ================================= */}
       </IonContent>
 
       <IonFooter>

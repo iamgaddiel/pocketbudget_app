@@ -28,7 +28,7 @@ const SearchBudgetPlans: React.FC<ModalParam> = ({ isOpen, setIsOpen }) => {
     >
       <IonContent className="ion-padding">
       <section className="mt-4">
-        <IonText className="">Search</IonText>
+        <IonText className="">Search</IonText>x
       </section>
         <form action="" onSubmit={handleSearch} className="ion-margin-top">
           <section className="">
