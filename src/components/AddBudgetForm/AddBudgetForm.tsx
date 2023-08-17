@@ -8,6 +8,7 @@ import { getSaveData, saveData } from '../../helpers/storageSDKs'
 import { BUDGETS } from '../../helpers/keys'
 import { useSetRecoilState } from 'recoil'
 import { budgetAtom } from '../../atoms/budgetAtom'
+import { getUUIDString } from '../../helpers/utils'
 
 
 
@@ -26,12 +27,11 @@ const AddBudgetForm: React.FC<ModalParam> = ({ isOpen, setIsOpen}) => {
     async function handleSubmit(e: React.FormEvent<HTMLFormElement>){
         e.preventDefault()
         
-        //TODO: submit form
         const formData: Budget = {
           ...state,
           deadline: new Date(state.deadline).getTime(),
           is_complete: false,
-          id: new Date().getTime()
+          id: getUUIDString()
         }
 
         const budgets = await getSaveData(BUDGETS) as Budget[]
