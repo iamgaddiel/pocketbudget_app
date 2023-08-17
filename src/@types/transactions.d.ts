@@ -14,10 +14,10 @@ export type TransactionCaegory =
   | "telecomes";
 
 export interface Transaction {
-  id: string | number;
+  id: string;
   category: TransactionCaegory;
   type: TransactionType;
-  timestamp: string;
+  timestamp: number;
   title: string;
   description?: string;
   amount: number

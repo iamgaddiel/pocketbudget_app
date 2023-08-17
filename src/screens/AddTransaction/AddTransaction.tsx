@@ -7,6 +7,7 @@ import {
   IonHeader,
   IonIcon,
   IonInput,
+  IonLoading,
   IonPage,
   IonSelect,
   IonSelectOption,
@@ -19,11 +20,103 @@ import {
   menuOutline,
   pencilOutline,
 } from "ionicons/icons";
-import React from "react";
-import { useParams } from "react-router";
+import React, { useReducer, useState } from "react";
+import { useHistory, useParams } from "react-router";
+import { Action } from "../../@types/actions";
+import { useRecoilState, useSetRecoilState } from "recoil";
+import { transactionsAtom } from "../../atoms/transactionAtom";
+import { v4 as uuid4 } from "uuid";
+import { getOrCreateTransactions, getUUIDString } from "../../helpers/utils";
+import { Transaction, TransactionCaegory } from "../../@types/transactions";
+import { saveData } from "../../helpers/storageSDKs";
+import { TRANSACTIONS } from "../../helpers/keys";
+
+const SET_TITLE = "SET_TTILE";
+const SET_AMOUNT = "SET_AMOUNT";
+const SET_CATEGORY = "SET_CATEGORY";
+const SET_DESCRIPTION = "SET_DESCRIPTION";
+
+interface FormField {
+  title: string;
+  amount: number;
+  category: TransactionCaegory;
+  description: string;
+}
+
+function reducer(state: FormField, { payload, type }: Action) {
+  const newState = { ...state };
+
+  switch (type) {
+    case SET_TITLE:
+      newState.title = payload;
+      break;
+
+    case SET_AMOUNT:
+      newState.amount = parseInt(payload as string);
+      break;
+
+    case SET_CATEGORY:
+      newState.category = payload;
+      break;
+
+    case SET_DESCRIPTION:
+      newState.description = payload;
+      break;
+
+    default:
+      return newState;
+  }
+  return newState;
+}
 
 const AddTransaction = () => {
-  const { transactionType } = useParams<{ transactionType: string }>();
+  const { transactionType } = useParams<{
+    transactionType: "income" | "expense";
+  }>();
+  const history = useHistory();
+
+  const [formFields, setFormFields] = useReducer(reducer, {
+    amount: 0,
+    title: "",
+    category: "food",
+    description: "",
+  });
+
+  const [currentTransactionsState, setTransactionState] =
+    useRecoilState(transactionsAtom);
+
+    const [isLoading, setIsLoading] = useState(false)
+
+
+  async function handleFormSubmit(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+    setIsLoading(true);
+
+    let transaction_type: string;
+    if (transactionType === "income") transaction_type = "income";
+    if (transactionType === "expense") transaction_type = "expense";
+
+    const timestamp = new Date().getTime();
+    const newFormData: Transaction = {
+      ...formFields,
+      id: getUUIDString(),
+      type: transactionType,
+      timestamp,
+    };
+
+    // save to DB
+    const transactions = await getOrCreateTransactions();
+    saveData(TRANSACTIONS, [...transactions, newFormData]);
+
+    // save to state
+    const newTransactions: Transaction[] = [
+      ...currentTransactionsState,
+      newFormData,
+    ];
+    setTransactionState(newTransactions);
+
+    setIsLoading(false);
+  }
 
   return (
     <IonPage>
@@ -37,7 +130,12 @@ const AddTransaction = () => {
       </IonHeader>
 
       <IonContent className="ion-padding">
-        <form action="">
+        <IonLoading
+          isOpen={isLoading}
+          message={"Saving..."}
+          onDidDismiss={() => history.push('/')}
+        />
+        <form onSubmit={handleFormSubmit}>
           {/* Title */}
           <IonCard className="px-4 py-3 rounded-3">
             <div className="d-flex align-items-center">
@@ -48,6 +146,13 @@ const AddTransaction = () => {
                 labelPlacement="floating"
                 placeholder="Get a gift"
                 className="ms-3"
+                required
+                onIonChange={(e) =>
+                  setFormFields({
+                    type: SET_TITLE,
+                    payload: e.detail.value,
+                  })
+                }
               />
             </div>
           </IonCard>
@@ -81,6 +186,13 @@ const AddTransaction = () => {
                 labelPlacement="floating"
                 placeholder="$100,000"
                 className="ms-3"
+                required
+                onIonChange={(e) =>
+                  setFormFields({
+                    type: SET_AMOUNT,
+                    payload: e.detail.value,
+                  })
+                }
               />
             </div>
           </IonCard>
@@ -91,9 +203,16 @@ const AddTransaction = () => {
               <IonIcon icon={menuOutline} size="large" />
               <IonSelect
                 placeholder="Income"
-                label="Transaction Type"
+                label="Category"
                 labelPlacement="floating"
                 className="ms-3"
+                aria-required
+                onIonChange={(e) =>
+                  setFormFields({
+                    type: SET_CATEGORY,
+                    payload: e.detail.value,
+                  })
+                }
               >
                 <IonSelectOption value={"transportation"}>
                   transportation
@@ -110,10 +229,37 @@ const AddTransaction = () => {
                 <IonSelectOption value={"telecomes"}>telecomes</IonSelectOption>
               </IonSelect>
             </div>
-         </IonCard>
+          </IonCard>
+
+          <IonCard className="px-4 py-3 rounded-3">
+            <div className="d-flex align-items-center">
+              <IonIcon icon={pencilOutline} size="large" />
+              <IonInput
+                type="text"
+                label="Description"
+                labelPlacement="floating"
+                placeholder="Something to unique to remember this tranaction"
+                className="ms-3"
+                onIonChange={(e) =>
+                  setFormFields({
+                    type: SET_DESCRIPTION,
+                    payload: e.detail.value,
+                  })
+                }
+              />
+            </div>
+          </IonCard>
 
           <div className="mt-5">
-            <IonButton expand="block" shape="round" size="large" className="text-capitalize">Confirm</IonButton>
+            <IonButton
+              type="submit"
+              expand="block"
+              shape="round"
+              size="large"
+              className="text-capitalize"
+            >
+              Confirm
+            </IonButton>
           </div>
         </form>
       </IonContent>

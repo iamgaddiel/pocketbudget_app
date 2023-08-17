@@ -24,6 +24,7 @@ import {
 import { getSaveData, saveData } from "../../helpers/storageSDKs";
 import { TRANSACTIONS } from "../../helpers/keys";
 import { Transaction } from "../../@types/transactions";
+import { getOrCreateTransactions } from "../../helpers/utils";
 
 
 
@@ -53,19 +54,6 @@ const Home = () => {
   }, []);
 
 
-
-  /**
-   * Gets transactions from DB if avaiable, if trasnactions return null creates an array of trsnactions: Transaction[]
-   * @returns transactions[] | []
-   */
-  async function getOrCreateTransactions(): Promise<Transaction[]> {
-    const storedTransactions = (await getSaveData(TRANSACTIONS)) as Transaction[];
-    if (storedTransactions === null) {
-      saveData(TRANSACTIONS, []);
-      return [];
-    }
-    return storedTransactions;
-  }
 
   async function loadTransactions() {
     const transactions = await getOrCreateTransactions();

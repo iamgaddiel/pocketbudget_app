@@ -17,7 +17,7 @@ import {
 interface TransactionItemPrams {
   type: TransactionType;
   title: string;
-  timestamp: string;
+  timestamp: number;
   category: TransactionCaegory;
   amount: number;
 }
@@ -93,7 +93,7 @@ const TransactionItem: React.FC<TransactionItemPrams> = ({
       {type === "expense" && (
         <span className="">
           <IonText className="text-danger fw-bold" slot="end">
-            <small>+{amount}</small>
+            <small>-{amount}</small>
           </IonText>
         </span>
       )}
