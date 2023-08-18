@@ -8,6 +8,7 @@ import {
   IonIcon,
   IonList,
   IonPage,
+  IonText,
   IonTitle,
   IonToolbar,
 } from "@ionic/react";
@@ -65,9 +66,9 @@ const PlanDetail = () => {
 
 
         <IonList lines="none" className="ion-margin-top">
-          {budgetItems.map((item) => (
+          {budgetItems.filter(item => item.budget === budgetId).map((item) => (
             <>
-              {item.category === category && item.budget ===  budgetId ? (
+              {item.category === category  ? (
                 <BudgetPlanItem
                   amount={item.amount}
                   category={item.category}
@@ -77,7 +78,7 @@ const PlanDetail = () => {
                 />
               ) : null}
 
-              {category === "all" && item.budget ===  budgetId ? (
+              {category === "all" ? (
                 <BudgetPlanItem
                   amount={item.amount}
                   category={item.category}
