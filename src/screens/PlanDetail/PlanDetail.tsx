@@ -67,7 +67,7 @@ const PlanDetail = () => {
         <IonList lines="none" className="ion-margin-top">
           {budgetItems.map((item) => (
             <>
-              {item.category === category ? (
+              {item.category === category && item.budget ===  budgetId ? (
                 <BudgetPlanItem
                   amount={item.amount}
                   category={item.category}
@@ -77,7 +77,7 @@ const PlanDetail = () => {
                 />
               ) : null}
 
-              {category === "all" ? (
+              {category === "all" && item.budget ===  budgetId ? (
                 <BudgetPlanItem
                   amount={item.amount}
                   category={item.category}

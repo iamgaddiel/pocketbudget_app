@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { BudgetCategory, BudgetItem } from "../../@types/budget";
 import {
   IonItem,
@@ -11,8 +11,6 @@ import {
 } from "@ionic/react";
 import { optionsOutline, ribbonOutline, trash } from "ionicons/icons";
 import EditPlanModal from "../EditPlanModal/EditPlanModal";
-import { useRecoilState } from "recoil";
-import { budgetItemAtom } from "../../atoms/budgetAtom";
 
 interface Prop {
   category: BudgetCategory | "all";
