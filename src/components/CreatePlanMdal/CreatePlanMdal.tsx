@@ -34,47 +34,11 @@ import { getSaveData, saveData } from "../../helpers/storageSDKs";
 import { BUDGET_ITEMS } from "../../helpers/keys";
 import { useSetRecoilState } from "recoil";
 import { budgetItemAtom } from "../../atoms/budgetAtom";
+import { SET_TITLE, SET_TYPE, SET_AMOUNT, SET_CATEGORY, SET_DESCRIPTION } from "../../reducer/actions/budgetActions";
+import { budgetItemReducer } from "../../reducer/reducers/budgetReducers";
 
 
-// FIXME: move action types to a seperate file
-const SET_TITLE = "SET_TTILE";
-const SET_AMOUNT = "SET_AMOUNT";
-const SET_CATEGORY = "SET_CATEGORY";
-const SET_DESCRIPTION = "SET_DESCRIPTION";
-const SET_TYPE = "SET_TYPE";
 
-
-// FIXME: move reducer to a seperate file
-function addBudgetItemReducer(state: BudgetItem, { type, payload }: Action) {
-  const newState = { ...state };
-
-  switch (type) {
-    case SET_TITLE:
-      newState.title = payload;
-      break;
-
-    case SET_AMOUNT:
-      newState.amount = payload;
-      break;
-
-    case SET_CATEGORY:
-      newState.category = payload;
-      break;
-
-    case SET_DESCRIPTION:
-      newState.aditional_decription = payload;
-      break;
-
-    case SET_TYPE:
-      newState.type = payload;
-      break;
-
-    default:
-      return newState;
-  }
-
-  return newState;
-}
 
 const CreatePlanMdal: React.FC<ModalParam> = ({
   isOpen,
@@ -84,7 +48,7 @@ const CreatePlanMdal: React.FC<ModalParam> = ({
   const [suggestions, setSuggestions] = useState("");
   const setBudgetItems = useSetRecoilState(budgetItemAtom);
 
-  const [state, setState] = useReducer(addBudgetItemReducer, {
+  const [state, setState] = useReducer(budgetItemReducer, {
     title: "",
     amount: 0,
     category: "whishlist",

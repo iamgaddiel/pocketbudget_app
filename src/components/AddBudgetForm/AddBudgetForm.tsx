@@ -1,6 +1,6 @@
 import { IonModal, IonContent, IonText, IonInput, IonButton } from '@ionic/react'
 import React, { useReducer } from 'react'
-import { addBudgetReducer } from '../../reducer/reducers/budgetReducer'
+import { budgetReducer } from '../../reducer/reducers/budgetReducers'
 import { SET_BUDGET_DEADLINE, SET_BUDGET_TITLE, SET_INITIAL_BUDGET } from '../../reducer/actions/AddBudgetAtions'
 import { ModalParam } from '../../@types/componetsPrams'
 import { Budget } from '../../@types/budget'
@@ -15,7 +15,7 @@ import { getUUIDString } from '../../helpers/utils'
 
 const AddBudgetForm: React.FC<ModalParam> = ({ isOpen, setIsOpen}) => {
   const setBudgets = useSetRecoilState(budgetAtom)
-    const [state, setState] = useReducer(addBudgetReducer, {
+    const [state, setState] = useReducer(budgetReducer, {
         title: "",
         timestamp: "sfsdfsdf",
         is_complete: false,
