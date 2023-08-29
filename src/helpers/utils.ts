@@ -8,7 +8,9 @@ import { Budget, BudgetItem } from "../@types/budget";
 
 
 
-
+export function getTimestamp() {
+  return new Date().getTime()
+}
 
 /**
   * Gets transactions from DB if avaiable, if trasnactions return null creates an array of trsnactions: Transaction[]

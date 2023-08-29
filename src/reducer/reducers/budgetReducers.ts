@@ -34,13 +34,13 @@ export function budgetReducer(state: Budget, {payload, type}: Action){
 } 
 
 
-// FIXME: move reducer to a seperate file
 export function budgetItemReducer(state: BudgetItem, { type, payload }: Action) {
     const newState = { ...state };
   
     switch (type) {
       case SET_TITLE:
         newState.title = payload;
+        console.log("🚀 ~ file: budgetReducers.ts:44 ~ budgetItemReducer ~ payload:", payload)
         break;
   
       case SET_AMOUNT:
@@ -58,9 +58,6 @@ export function budgetItemReducer(state: BudgetItem, { type, payload }: Action) 
       case SET_TYPE:
         newState.type = payload;
         break;
-  
-      default:
-        return newState;
     }
   
     return newState;

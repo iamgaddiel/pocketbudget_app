@@ -26,6 +26,7 @@ import {
   optionsOutline,
   pencilOutline,
   menuOutline,
+  caretDown,
 } from "ionicons/icons";
 import { BudgetItem } from "../../@types/budget";
 import { Action } from "../../@types/actions";
@@ -129,7 +130,7 @@ const CreatePlanMdal: React.FC<ModalParam> = ({
               }
             />
           </div>
-            <IonText className="text-muted"><small>Select a type </small></IonText>
+            <IonText className="text-muted d-flex align-items-center"><small>Select a type </small> <IonIcon icon={caretDown} color={'dark'} className="ms-3" /></IonText>
             <hr />
           <div className="my-3">
             <IonChip outline onClick={() => setSuggestions("Education")}>

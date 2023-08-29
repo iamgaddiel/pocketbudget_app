@@ -31,6 +31,7 @@ const PlanDetail = () => {
   const [budgetItems, setBudgetItems] = useRecoilState(budgetItemAtom);
 
   const [category, setCategory] = useState<BudgetCategory | "all">("all");
+
   const budgets = useRecoilValue(budgetDemoAtom);
 
   const [openCreateModal, setCrateModal] = useState(false);
@@ -40,7 +41,7 @@ const PlanDetail = () => {
       const loadedBudgetItems = await getOrCreateBudgetItem();
       setBudgetItems(loadedBudgetItems);
     })();
-  }, []);
+  }, [budgetItems]);
 
   return (
     <IonPage>
@@ -73,8 +74,8 @@ const PlanDetail = () => {
                   amount={item.amount}
                   category={item.category}
                   title={item.title}
-                  is_complete={false}
                   budgetPlan={item}
+                  key={item.id}
                 />
               ) : null}
 
@@ -83,8 +84,8 @@ const PlanDetail = () => {
                   amount={item.amount}
                   category={item.category}
                   title={item.title}
-                  is_complete={false}
                   budgetPlan={item}
+                  key={item.id}
                 />
               ) : null}
             </>
