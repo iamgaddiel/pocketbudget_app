@@ -4,6 +4,7 @@ import {
   IonTabBar,
   IonTabButton,
   IonIcon,
+  IonLabel,
 } from "@ionic/react";
 import { IonReactRouter } from "@ionic/react-router";
 import {
@@ -11,6 +12,7 @@ import {
   checkboxOutline,
   personCircleOutline,
   calendarOutline,
+  cogSharp,
 } from "ionicons/icons";
 import { Route } from "react-router";
 import { useRecoilValue } from "recoil";
@@ -57,15 +59,19 @@ const Routes = () => {
           <IonTabBar slot="bottom" className="ion-padding-vertical">
             <IonTabButton tab="tab1" href="/">
               <IonIcon icon={homeOutline} size="large" />
+              <IonLabel>Home</IonLabel>
             </IonTabButton>
             <IonTabButton tab="tab2" href="/budgets">
               <IonIcon icon={checkboxOutline} size="large" />
+              <IonLabel>Budgets</IonLabel>
             </IonTabButton>
             <IonTabButton tab="tab3" href="/history">
               <IonIcon icon={calendarOutline} size="large" />
+              <IonLabel>History</IonLabel>
             </IonTabButton>
             <IonTabButton tab="tab4" href="/me">
-              <IonIcon icon={personCircleOutline} size="large" />
+              <IonIcon icon={cogSharp} size="large" />
+              <IonLabel>Setting</IonLabel>
             </IonTabButton>
           </IonTabBar>
         </IonTabs>
