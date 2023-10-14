@@ -1,34 +1,14 @@
 import { format } from "date-fns";
 import { getApiCollectionItem, listApiCollection } from "./apiHelpers";
 import { v4 as uuid4 } from 'uuid'
-import { Transaction } from "../@types/transactions";
-import { BUDGETS, BUDGET_ITEMS, TRANSACTIONS } from "./keys";
+import { BUDGETS, BUDGET_ITEMS } from "./keys";
 import { getSaveData, saveData } from "./storageSDKs";
 import { Budget, BudgetItem } from "../@types/budget";
 
 
 
-export function getTimestamp() {
-  return new Date().getTime()
-}
 
-/**
-  * Gets transactions from DB if avaiable, if trasnactions return null creates an array of trsnactions: Transaction[]
-  * @returns transactions[] | []
-  */
-export async function getOrCreateTransactions(): Promise<Transaction[]> {
-  const storedTransactions = (await getSaveData(TRANSACTIONS)) as Transaction[];
-  if (storedTransactions === null) {
-    saveData(TRANSACTIONS, []);
-    return [];
-  }
-  return storedTransactions;
-}
 
-/**
-  * Gets budgets from DB if avaiable, if trasnactions return null creates an array of budget: Budget[]
-  * @returns Budget[] | []
-  */
 export async function getOrCreateBudget(): Promise<Budget[]> {
   const soredBudgets = (await getSaveData(BUDGETS)) as Budget[];
   if (soredBudgets === null) {
@@ -38,10 +18,7 @@ export async function getOrCreateBudget(): Promise<Budget[]> {
   return soredBudgets;
 }
 
-/**
-  * Gets budgets from DB if avaiable, if trasnactions return null creates an array of budgetItems: BudgetItem[]
-  * @returns BudgetItem[] | []
-  */
+
 export async function getOrCreateBudgetItem(): Promise<BudgetItem[]> {
   const soredBudgetItems = (await getSaveData(BUDGET_ITEMS)) as BudgetItem[];
   if (soredBudgetItems === null) {
@@ -51,6 +28,40 @@ export async function getOrCreateBudgetItem(): Promise<BudgetItem[]> {
   return soredBudgetItems;
 }
 
+
+export async function getOrCreateAppDBCollectionList<T>(collectionName: string): Promise<T[]> {
+  const collection = (await getSaveData(collectionName)) as T[];
+  if (collection === null) {
+    saveData(collectionName, []);
+    return [];
+  }
+  return collection;
+}
+
+
+export async function updateAppDBCollection<T>(collectionName: string, item: Partial<T>): Promise<T> {
+  const data = await getSaveData(collectionName) as T
+  const newData = { ...data, ...item }
+  saveData(collectionName, newData)
+  return newData
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+export function getTimestamp() {
+  return new Date().getTime()
+}
 
 /**
  * Returns UUID string
@@ -73,12 +84,12 @@ export function getRandomString(length: number) {
 /**
  * 
  * @param date 
- * @description returns formated date in this format <Month> <Day of the Month> E.g Aug 02 
+ * @description returns formatted date in this format <Month> <Day of the Month> E.g Aug 02 
  * @returns 
  */
-export function formatDate(date: string) {
-  const formatedDated = format(new Date(date), 'LLL dd') // Month 01
-  return formatedDated
+export function formatDate(date: string | number): string {
+  const formattedDated = format(new Date(date), 'LLL dd') // Month 01
+  return formattedDated as string
 }
 
 /**

@@ -2,7 +2,6 @@ import {
   IonContent,
   IonHeader,
   IonIcon,
-  IonItem,
   IonList,
   IonPage,
   IonRouterLink,
@@ -10,21 +9,23 @@ import {
   IonTitle,
   IonToolbar,
 } from "@ionic/react";
-import { add, chevronForward, menu, personCircleOutline } from "ionicons/icons";
-import { useCallback, useEffect, useState } from "react";
+import { chevronForward, personCircleOutline } from "ionicons/icons";
+import { useCallback, useEffect } from "react";
 
 import ChartLine from "../../assets/images/chartline.png";
-import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
+import { useRecoilState, useSetRecoilState } from "recoil";
 import { utilsAtom } from "../../atoms/utilityAtom";
 import TransactionItem from "../../components/TransactionItem/TransactionItem";
 import {
   transactionsAtom,
-  demoTransactionAtom,
 } from "../../atoms/transactionAtom";
+import { getOrCreateAppDBCollectionList } from "../../helpers/utils";
+import { historyAtom } from "../../atoms/historyAtom";
+import { appConfigAtom } from "../../atoms/appAtom";
 import { getSaveData, saveData } from "../../helpers/storageSDKs";
-import { TRANSACTIONS } from "../../helpers/keys";
+import { APP_CONFIG, TRANSACTIONS } from "../../helpers/keys";
+import { AppConfig } from "../../@types/appConfig";
 import { Transaction } from "../../@types/transactions";
-import { getOrCreateTransactions } from "../../helpers/utils";
 
 
 
@@ -33,9 +34,11 @@ import { getOrCreateTransactions } from "../../helpers/utils";
 const Home = () => {
   const setShowTabs = useSetRecoilState(utilsAtom);
   const [transactions, setAppTransactionsState] = useRecoilState(transactionsAtom);
+  const setHistory = useSetRecoilState(historyAtom)
+  const setAppConfig = useSetRecoilState(appConfigAtom)
 
   
-  const totalIncome = useCallback(getTotalTransactionIcome, [])();
+  const totalIncome = useCallback(getTotalTransactionIncome, [])();
   const totalExpenses = useCallback(getTotalTransactionExpense, [])();
   const totalBalance = useCallback(getTotalBalance, [
     totalIncome,
@@ -44,6 +47,25 @@ const Home = () => {
 
 
 
+  useEffect(() => {
+    // get or set app config
+    (async () => {
+      const appConfig = await getSaveData(APP_CONFIG) as AppConfig
+
+      if (appConfig === null){
+        const config: AppConfig = {
+          app_currency: 'NGN',
+          app_name: 'PocketBudget',
+          theme: 'light'
+        }
+        saveData(APP_CONFIG, config)
+        setAppConfig(config)
+        return
+      }
+      
+      setAppConfig(appConfig)
+    })()
+  }, [])
 
   useEffect(() => {
     loadTransactions();
@@ -56,15 +78,15 @@ const Home = () => {
 
 
   async function loadTransactions() {
-    const transactions = await getOrCreateTransactions();
+    const transactions = (await getOrCreateAppDBCollectionList<Transaction>(TRANSACTIONS)).reverse();
     setAppTransactionsState(transactions);
   }
 
   /**
-   * Gets all income transactions and returns thier sum or zero (0) no transactions are found
+   * Gets all income transactions and returns their sum or zero (0) no transactions are found
    * @returns income
    */
-  function getTotalTransactionIcome(): number {
+  function getTotalTransactionIncome(): number {
     // check if transactions are empty
     if (transactions.length < 1) return 0;
 

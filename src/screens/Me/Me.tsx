@@ -27,6 +27,9 @@ import {
 } from "ionicons/icons";
 
 import PlaceholderImage from "../../assets/images/404.png";
+import CurrencySelectionModal from "../../components/CurrencySelectionModal";
+import { useRecoilValue } from "recoil";
+import { appConfigAtom } from "../../atoms/appAtom";
 
 interface AlertState {
   message: string;
@@ -35,6 +38,47 @@ interface AlertState {
   header?: string;
   subHeader?: string;
 }
+
+
+
+
+
+
+// import { Share } from '@capacitor/share';
+
+// await Share.share({
+//   title: 'See cool stuff',
+//   text: 'Really awesome thing you need to see right meow',
+//   url: 'http://ionicframework.com/',
+//   dialogTitle: 'Share with buddies',
+// });
+
+// // Share text only
+// await Share.share({
+//   text: 'Really awesome thing you need to see right meow',
+// });
+
+// // Share url only
+// await Share.share({
+//   url: 'http://ionicframework.com/',
+// });
+
+// // Share local file using url parameter
+// const photo = await Camera.getPhoto(options);
+// await Share.share({
+//   url: photo.path,
+// });
+
+// // Share multiple files using files parameter
+// const { photos } = await Camera.pickImages(options);
+// await Share.share({
+//   files: photos.map(photo => photo.path!),
+// });
+
+
+
+
+
 const Me = () => {
   //TODO: implement share functionality
   const [showCofirmDeleteAlert, setShowConfirmDeleteAlert] =
@@ -45,9 +89,19 @@ const Me = () => {
     });
   useState(false);
   const [showContactAlert, setShowContactlert] = useState(false);
+  const [isOpen, setIsOpen] = useState(false)
+  
+  const { app_currency } = useRecoilValue(appConfigAtom)
+
+
+
+
+
+
+
 
   async function deleteAccount() {
-    //TODO: impplement accound deletion
+    //TODO: implement accound deletion
     setShowConfirmDeleteAlert({
       message: "",
       isConfirm: false,
@@ -61,6 +115,10 @@ const Me = () => {
     <IonPage>
       <HeaderTitle title="Profile" className="py-2" icon={personCircle} />
       <IonContent className="ion-padding">
+        {/* ======================= Currency Modal ===================== */}
+        <CurrencySelectionModal isOpen={isOpen} setIsOpen={setIsOpen} />
+        {/* ======================= Currency Modal ===================== */}
+
         {/* ======================= Alart Starts ===================== */}
         <IonAlert
           isOpen={showContactAlert}
@@ -110,21 +168,26 @@ const Me = () => {
 
           <IonList className="mt-3" lines="full">
             {/* TODO: hide if anonymous */}
+            {/* Profile Info */}
             <IonItem routerDirection="forward" routerLink="/profile_info">
               <IonIcon icon={idCardOutline} slot="start" />
               <IonLabel>Profile Info</IonLabel>
             </IonItem>
+            {/* Share */}
             <IonItem>
               <IonIcon icon={shareOutline} slot="start" />
               <IonLabel>Share</IonLabel>
             </IonItem>
+            {/* Contact Us */}
             <IonItem onClick={() => setShowContactlert(true)}>
               <IonIcon icon={phonePortraitOutline} slot="start" />
               <IonLabel color={"primary"}>Contact Us</IonLabel>
             </IonItem>
-            <IonItem>
+            {/* Currency */}
+            <IonItem onClick={() => setIsOpen(() => true)}>
               <IonIcon icon={logoEuro} slot="start" />
               <IonLabel color={"primary"}>Currency</IonLabel>
+              <IonLabel color={"primary"} slot="end">{app_currency}</IonLabel>
             </IonItem>
 
             {/* TODO: hide if anonymous */}

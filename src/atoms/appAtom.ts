@@ -1,29 +1,41 @@
 import { atom } from "recoil";
-import { StoredUser } from "../@types/users";
+import { AppConfig } from "../@types/appConfig";
 
 
 
 
-export const userAtom = atom<StoredUser>({
-    key: 'USER',
+
+
+export const appConfigAtom = atom<AppConfig>({
+    key: 'APP_CONFIG',
     default: {
-        token: "",
-        record: {
-            id: "",
-            collectionId: "",
-            collectionName: "",
-            created: "",
-            updated: "",
-            username: "",
-            verified: false,
-            emailVisibility: false,
-            email: "",
-            name: "",
-            avatar: "",
-            account_type: 'host',
-            is_disabled: false,
-            report_count: 0,
-            phone: "",
-        }
+        app_currency: '',
+        app_name: 'PocketBudget',
+        theme: 'light'
     }
 })
+
+
+// export const userAtom = atom<StoredUser>({
+//     key: 'USER',
+//     default: {
+//         token: "",
+//         record: {
+//             id: "",
+//             collectionId: "",
+//             collectionName: "",
+//             created: "",
+//             updated: "",
+//             username: "",
+//             verified: false,
+//             emailVisibility: false,
+//             email: "",
+//             name: "",
+//             avatar: "",
+//             account_type: 'host',
+//             is_disabled: false,
+//             report_count: 0,
+//             phone: "",
+//         }
+//     }
+// })
