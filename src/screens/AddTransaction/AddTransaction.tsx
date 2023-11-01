@@ -26,7 +26,7 @@ import { Action } from "../../@types/actions";
 import { useRecoilState, useSetRecoilState } from "recoil";
 import { transactionsAtom } from "../../atoms/transactionAtom";
 import { v4 as uuid4 } from "uuid";
-import { getOrCreateTransactions, getUUIDString } from "../../helpers/utils";
+import { getOrCreateAppDBCollectionList, getUUIDString } from "../../helpers/utils";
 import { Transaction, TransactionCaegory } from "../../@types/transactions";
 import { saveData } from "../../helpers/storageSDKs";
 import { TRANSACTIONS } from "../../helpers/keys";
@@ -101,7 +101,7 @@ const AddTransaction = () => {
     if (transactionType === "income") transaction_type = "income";
     if (transactionType === "expense") transaction_type = "expense";
 
-    const timestamp = new Date().getTime();
+    const timestamp = new Date().toString()
     const newFormData: Transaction = {
       ...formFields,
       id: getUUIDString(),
@@ -110,7 +110,7 @@ const AddTransaction = () => {
     };
 
     // save to DB
-    const transactions = await getOrCreateTransactions();
+    const transactions = await getOrCreateAppDBCollectionList<Transaction>(TRANSACTIONS);
     saveData(TRANSACTIONS, [...transactions, newFormData]);
 
     // save to state

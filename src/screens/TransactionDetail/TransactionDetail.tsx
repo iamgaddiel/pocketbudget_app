@@ -3,6 +3,7 @@ import {
   IonButtons,
   IonContent,
   IonHeader,
+  IonIcon,
   IonItem,
   IonList,
   IonPage,
@@ -15,11 +16,12 @@ import { useParams } from "react-router";
 import { TrasctionDetailParam } from "../../@types/transactions";
 import TransactionItem from "../../components/TransactionItem/TransactionItem";
 import { useRecoilValue } from "recoil";
-import {  demoTransactionAtom } from "../../atoms/transactionAtom";
+import { demoTransactionAtom, transactionsAtom } from "../../atoms/transactionAtom";
+import { cloudOffline } from "ionicons/icons";
 
 function TransactionDetail() {
   const { transactionType, trasactionId } = useParams<TrasctionDetailParam>();
-  const transactions = useRecoilValue(demoTransactionAtom);
+  const transactions = useRecoilValue(transactionsAtom);
 
   //   const BIBLE = "2peter 3:9"
   // const PRAy_like_this_30_tile  = pray fisrt (then prophesy)
@@ -50,35 +52,53 @@ function TransactionDetail() {
 
         <IonItem>
           <IonList>
-            {transactionType === "income" &&
-              transactions.map((item) => (
-                <>
-                  {item.type === "income" && (
-                    <TransactionItem
-                      amount={item.amount}
-                      category={item.category}
-                      timestamp={item.timestamp}
-                      title={item.title}
-                      type={item.type}
-                    />
-                  )}
-                </>
-              ))}
-
-            {transactionType === "expense" &&
-              transactions.map((item) => (
-                <>
-                  {item.type === "expense" && (
-                    <TransactionItem
-                      amount={item.amount}
-                      category={item.category}
-                      timestamp={item.timestamp}
-                      title={item.title}
-                      type={item.type}
-                    />
-                  )}
-                </>
-              ))}
+            {transactionType === "income" && (
+              <>
+                {
+                  transactions.length >= 1 ?
+                    transactions.map((item) => (
+                      <>
+                        {item.type === "income" && (
+                          <TransactionItem
+                            amount={item.amount}
+                            category={item.category}
+                            timestamp={item.timestamp}
+                            title={item.title}
+                            type={item.type}
+                          />
+                        )}
+                      </>
+                    )) : <h4 className="text-muted d-flex align-items-center justify-content-center">
+                      <IonIcon icon={cloudOffline} className="me-2" />
+                      You have no expenses yet
+                    </h4>
+                }
+              </>
+            )}
+            
+            {transactionType === "expense" && (
+              <>
+                {
+                  transactions.length >= 1 ?
+                    transactions.map((item) => (
+                      <>
+                        {item.type === "expense" && (
+                          <TransactionItem
+                            amount={item.amount}
+                            category={item.category}
+                            timestamp={item.timestamp}
+                            title={item.title}
+                            type={item.type}
+                          />
+                        )}
+                      </>
+                    )) : <h4 className="text-muted d-flex align-items-center justify-content-center">
+                      <IonIcon icon={cloudOffline} className="me-2" />
+                      You have no expenses yet
+                    </h4>
+                }
+              </>
+            )}
           </IonList>
         </IonItem>
       </IonContent>

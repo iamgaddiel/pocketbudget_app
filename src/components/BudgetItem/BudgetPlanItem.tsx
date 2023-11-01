@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { BudgetCategory, BudgetItem } from "../../@types/budget";
 import {
   IonItem,
@@ -16,7 +16,7 @@ import { BUDGET_ITEMS } from "../../helpers/keys";
 import { getSaveData, saveData } from "../../helpers/storageSDKs";
 import { useSetRecoilState } from "recoil";
 import { budgetItemAtom } from "../../atoms/budgetAtom";
-import { getTimestamp } from "../../helpers/utils";
+import { getOrCreateAppDBCollectionList, getTimestamp, updateAppDBCollection } from "../../helpers/utils";
 
 interface Prop {
   category: BudgetCategory | "all";
@@ -42,6 +42,9 @@ const BudgetPlanItem: React.FC<Prop> = ({
 
 
 
+
+
+
   function removeObjectFromArray<T>(array: T[], objectToDelete: T): T[] {
     const indexToDelete = array.indexOf(objectToDelete);
 
@@ -53,25 +56,21 @@ const BudgetPlanItem: React.FC<Prop> = ({
   }
 
 
-
   async function handlePlanItemDelete(budgetPlanId: string) {
+    const budgetPlanItems = await getOrCreateAppDBCollectionList<BudgetItem>(BUDGET_ITEMS)
 
-    const budgetItems = (await getSaveData(BUDGET_ITEMS)) as BudgetItem[];
-
-    const selectedBudgetItem = budgetItems.find(i => i.id === budgetPlanId)
-
-    // const updateBudgetItems = removeObjectFromArray(budgetItems, selectedBudgetItem) as BudgetItem[]
-
-    const updateBudgetItems = budgetItems.filter(i => i?.id !== budgetItem.id)
+    const updateBudgetItems = budgetPlanItems.filter(item => item?.id !== budgetPlanId)
 
     saveData(BUDGET_ITEMS, updateBudgetItems); // save to DB
 
-    // setBudgetItems(updateBudgetItems); // save to App State
+    setBudgetItems(updateBudgetItems); // save to App State
+
+    setShowAleart({ enabled: false, itemTitle: '' }) // reset aleart object
   }
 
 
   async function toggleItemComplete() {
-    const newdBudgetItemValues: BudgetItem = {
+    const newBudgetItemValues: BudgetItem = {
       ...budgetItem,
       is_complete: true,
       updated: getTimestamp(),
@@ -92,7 +91,7 @@ const BudgetPlanItem: React.FC<Prop> = ({
     // Update budget values
     const updatedBudgetItem = {
       ...currentBudgetItemValues,
-      ...newdBudgetItemValues,
+      ...newBudgetItemValues,
     };
 
     // Update budgetItems with update budgetItem values
@@ -116,8 +115,13 @@ const BudgetPlanItem: React.FC<Prop> = ({
             text: "Confirm",
             cssClass: "text-danger",
             handler: () => handlePlanItemDelete(budgetItem.id!),
+            // handler: () => console.log(budgetItem.id!),
           },
         ]}
+        onDidDismiss={() => setShowAleart({
+          enabled: false,
+          itemTitle: ''
+        })}
       />
       {/* ============================= [Show Edit Modal Start]  ================================ */}
       <EditPlanModal
@@ -134,7 +138,7 @@ const BudgetPlanItem: React.FC<Prop> = ({
             <IonIcon
               icon={trash}
               slot="icon-only"
-              onClick={() => setShowAleart({ enabled: true, itemTitle: "" })}
+              onClick={() => setShowAleart({ enabled: true, itemTitle: budgetItem?.title! })}
             />
           </IonItemOption>
         </IonItemOptions>
@@ -162,8 +166,8 @@ const BudgetPlanItem: React.FC<Prop> = ({
             />
           </span>
         </IonItem>
-            
-            {/* Edit button */}
+
+        {/* Edit button */}
         <IonItemOptions side="end">
           <IonItemOption
             className=""

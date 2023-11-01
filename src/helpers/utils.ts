@@ -1,36 +1,12 @@
 import { format } from "date-fns";
-import { getApiCollectionItem, listApiCollection } from "./apiHelpers";
 import { v4 as uuid4 } from 'uuid'
-import { BUDGETS, BUDGET_ITEMS } from "./keys";
 import { getSaveData, saveData } from "./storageSDKs";
-import { Budget, BudgetItem } from "../@types/budget";
 
 
-
-
-
-export async function getOrCreateBudget(): Promise<Budget[]> {
-  const soredBudgets = (await getSaveData(BUDGETS)) as Budget[];
-  if (soredBudgets === null) {
-    saveData(BUDGETS, []);
-    return [];
-  }
-  return soredBudgets;
-}
-
-
-export async function getOrCreateBudgetItem(): Promise<BudgetItem[]> {
-  const soredBudgetItems = (await getSaveData(BUDGET_ITEMS)) as BudgetItem[];
-  if (soredBudgetItems === null) {
-    saveData(BUDGET_ITEMS, []);
-    return [];
-  }
-  return soredBudgetItems;
-}
 
 
 export async function getOrCreateAppDBCollectionList<T>(collectionName: string): Promise<T[]> {
-  const collection = (await getSaveData(collectionName)) as T[];
+  const collection = await getSaveData(collectionName) as T[];
   if (collection === null) {
     saveData(collectionName, []);
     return [];
@@ -41,6 +17,14 @@ export async function getOrCreateAppDBCollectionList<T>(collectionName: string):
 
 export async function updateAppDBCollection<T>(collectionName: string, item: Partial<T>): Promise<T> {
   const data = await getSaveData(collectionName) as T
+  const newData = { ...data, ...item }
+  saveData(collectionName, newData)
+  return newData
+}
+
+
+export async function updateAppDBCollectionList<T>(collectionName: string, item: Partial<T>): Promise<T[]> {
+  const data = await getSaveData(collectionName) as T[]
   const newData = { ...data, ...item }
   saveData(collectionName, newData)
   return newData

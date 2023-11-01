@@ -8,7 +8,7 @@ import { getSaveData, saveData } from '../../helpers/storageSDKs'
 import { BUDGETS } from '../../helpers/keys'
 import { useSetRecoilState } from 'recoil'
 import { budgetAtom } from '../../atoms/budgetAtom'
-import { getUUIDString } from '../../helpers/utils'
+import { getUUIDString, updateAppDBCollection, updateAppDBCollectionList } from '../../helpers/utils'
 
 
 
@@ -17,10 +17,10 @@ const AddBudgetForm: React.FC<ModalParam> = ({ isOpen, setIsOpen}) => {
   const setBudgets = useSetRecoilState(budgetAtom)
     const [state, setState] = useReducer(budgetReducer, {
         title: "",
-        timestamp: "sfsdfsdf",
+        timestamp: "",
         is_complete: false,
         deadline: 0,
-        initialBudget: "3000"
+        initialBudget: 0
     })
 
 
@@ -37,6 +37,8 @@ const AddBudgetForm: React.FC<ModalParam> = ({ isOpen, setIsOpen}) => {
         const budgets = await getSaveData(BUDGETS) as Budget[]
         const newBudgets = [...budgets, formData]
         saveData(BUDGETS, newBudgets)
+        
+        // const budgets = await updateAppDBCollectionList<Budget>(BUDGETS, formData)
         setBudgets(newBudgets)
         setIsOpen(false)
     }
@@ -54,11 +56,11 @@ const AddBudgetForm: React.FC<ModalParam> = ({ isOpen, setIsOpen}) => {
               <hr />
             </section>
 
-            <form action="" className="ion-margin-vertical" onSubmit={handleSubmit}>
+            <form className="ion-margin-vertical" onSubmit={handleSubmit}>
               <section>
                 <IonInput
                   type="text"
-                  placeholder="Things to get before Chrismas"
+                  placeholder="Things to get before Christmas"
                   labelPlacement="start"
                   label="Title : "
                   required
@@ -74,6 +76,7 @@ const AddBudgetForm: React.FC<ModalParam> = ({ isOpen, setIsOpen}) => {
                   label="Initial Budget :"
                   required
                   helperText="Don't worry this value can change as you add budget items"
+                  inputMode='numeric'
                   onIonChange={(event) => setState({
                     type: SET_INITIAL_BUDGET,
                     payload: event.detail.value
@@ -83,7 +86,7 @@ const AddBudgetForm: React.FC<ModalParam> = ({ isOpen, setIsOpen}) => {
                   type="date"
                   placeholder="$50,000"
                   labelPlacement="start"
-                  label="Deatline :"
+                  label="Deadline : "
                   required
                   onIonChange={(event) => setState({
                     type: SET_BUDGET_DEADLINE,

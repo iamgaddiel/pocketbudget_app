@@ -17,7 +17,7 @@ export interface Transaction {
   id: string;
   category: TransactionCaegory;
   type: TransactionType;
-  timestamp: number;
+  timestamp: string;
   title: string;
   description?: string;
   amount: number

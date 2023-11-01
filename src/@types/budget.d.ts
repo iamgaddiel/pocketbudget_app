@@ -9,7 +9,7 @@ export interface Budget{
     timestamp: string
     is_complete: boolean
     deadline: number
-    initialBudget: string
+    initialBudget: number
 }
 
 export interface BudgetItem{

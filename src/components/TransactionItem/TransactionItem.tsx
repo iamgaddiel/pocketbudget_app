@@ -13,11 +13,12 @@ import {
   giftOutline,
   settingsOutline,
 } from "ionicons/icons";
+import { formatDate } from "../../helpers/utils";
 
 interface TransactionItemPrams {
   type: TransactionType;
   title: string;
-  timestamp: number;
+  timestamp: string;
   category: TransactionCaegory;
   amount: number;
 }
@@ -79,7 +80,7 @@ const TransactionItem: React.FC<TransactionItemPrams> = ({
 
       <IonLabel className="ion-margin-start">
         <h2>{title}</h2>
-        <p>{timestamp}</p>
+        <p>{formatDate(timestamp)}</p>
       </IonLabel>
 
       {type === "income" && (

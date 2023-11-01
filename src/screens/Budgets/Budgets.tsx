@@ -5,25 +5,31 @@ import {
   IonIcon,
   IonLabel,
   IonPage,
+  IonSearchbar,
   IonText,
   IonTitle,
   IonToolbar,
+  useIonViewDidEnter,
 } from "@ionic/react";
 import { useEffect, useState } from "react";
 import {
   calendarNumberOutline,
   createOutline,
   searchOutline,
+  trash,
 } from "ionicons/icons";
 import AddBudgetForm from "../../components/AddBudgetForm/AddBudgetForm";
 import SearchBudgetPlans from "../../components/SearchBudgetPlans/SearchBudgetPlans";
-import { getOrCreateBudget } from "../../helpers/utils";
+import { formatDate, getOrCreateAppDBCollectionList } from "../../helpers/utils";
 import { useRecoilState } from "recoil";
 import { budgetAtom } from "../../atoms/budgetAtom";
+import { Budget } from "../../@types/budget";
+import { BUDGETS } from "../../helpers/keys";
+import { saveData } from "../../helpers/storageSDKs";
 
 
 
-const Budget = () => {
+const Budgets = () => {
   // [State] --------------------------------------------------------
 
   const [showCreateModal, setShowCreateModal] = useState(false);
@@ -34,24 +40,31 @@ const Budget = () => {
   const [budgets, setBudgets] = useRecoilState(budgetAtom);
 
   // [Effect] --------------------------------------------------------
-  useEffect(() => {
+  // useEffect(() => {
+  //   (async () => {
+  //     const storedBudgets = await getOrCreateAppDBCollectionList<Budget>(BUDGETS);
+  //     setBudgets(storedBudgets);
+  //   })();
+  // }, []);
+
+
+  useIonViewDidEnter(() => {
     (async () => {
-      const storedBudgets = await getOrCreateBudget();
+      const storedBudgets = await getOrCreateAppDBCollectionList<Budget>(BUDGETS);
       setBudgets(storedBudgets);
     })();
-  }, []);
+  }, [budgets])
+
+
+  async function deleteAllBudgets() {
+    saveData(BUDGETS, [])
+    setBudgets([])
+  }
 
   return (
     <IonPage>
       <IonHeader className="ion-no-border">
         <IonToolbar color={"primary"} className="p-2">
-          <IonIcon
-            className="mx-2"
-            icon={searchOutline}
-            slot="start"
-            size="large"
-            onClick={() => setShowSearchModal(true)}
-          />
           <IonTitle>Budget Plans</IonTitle>
           <IonIcon
             className="mx-2"
@@ -60,6 +73,16 @@ const Budget = () => {
             size="large"
             onClick={() => setShowCreateModal(true)}
           />
+          <IonIcon
+            className="mx-2"
+            icon={trash}
+            slot="end"
+            size="large"
+            onClick={() => deleteAllBudgets()}
+          />
+        </IonToolbar>
+        <IonToolbar color={"primary"} className="p-2">
+          <IonSearchbar mode="ios" />
         </IonToolbar>
       </IonHeader>
       <IonContent className="ion-padding">
@@ -70,16 +93,16 @@ const Budget = () => {
         />
         {/* ========================= [Add Budget Modal Ends] ================================= */}
         {/* ========================= [Search Modal Start] ================================= */}
-        <SearchBudgetPlans
+        {/* <SearchBudgetPlans
           isOpen={showSearchModal}
           setIsOpen={setShowSearchModal}
-        />
+        /> */}
         {/* ========================= [Search Modal Ends] ================================= */}
         {budgets.length > 0 ? budgets.map((budget) => (
           <IonCard
             className="ion-padding"
             routerDirection="forward"
-            routerLink={`/budget/title/${budget.id!}`}
+            routerLink={`/budget/${budget.id}/${budget.id!}`}
             key={budget.id}
           >
             <IonLabel className="ms-3 d-flex align-items-center">
@@ -90,15 +113,15 @@ const Budget = () => {
               />
               <div className="ion-margin-start">
                 <h2>{budget.title}</h2>
-                <p>{budget.deadline}</p>
+                <p>{formatDate(budget.deadline)}</p>
               </div>
             </IonLabel>
           </IonCard>
           // FIXME: use a better not found error
-        )) : <IonText classNmae='text-muted'>No budtet yet</IonText>}
+        )) : <IonText className='text-muted'>No budget yet</IonText>}
       </IonContent>
     </IonPage>
   );
 };
 
-export default Budget;
+export default Budgets;

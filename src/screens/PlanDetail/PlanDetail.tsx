@@ -8,19 +8,23 @@ import {
   IonIcon,
   IonList,
   IonPage,
-  IonText,
+  IonRefresher,
+  IonRefresherContent,
   IonTitle,
   IonToolbar,
+  RefresherEventDetail,
+  useIonViewDidEnter,
 } from "@ionic/react";
 import { useParams } from "react-router";
-import { useRecoilState, useRecoilValue } from "recoil";
-import { useEffect, useState } from "react";
-import { BudgetCategory } from "../../@types/budget";
-import { budgetDemoAtom, budgetItemAtom } from "../../atoms/budgetAtom";
-import CreatePlanMdal from "../../components/CreatePlanMdal/CreatePlanMdal";
+import { useRecoilState } from "recoil";
+import { useState } from "react";
+import { BudgetCategory, BudgetItem } from "../../@types/budget";
+import { budgetItemAtom } from "../../atoms/budgetAtom";
 import BudgetPlanItem from "../../components/BudgetItem/BudgetPlanItem";
 import { createOutline } from "ionicons/icons";
-import { getOrCreateBudgetItem } from "../../helpers/utils";
+import { getOrCreateAppDBCollectionList } from "../../helpers/utils";
+import { BUDGET_ITEMS } from "../../helpers/keys";
+import CreatePlanModal from "../../components/CreatePlanMdal/CreatePlanMdal";
 
 const PlanDetail = () => {
   const { budgetTitle, budgetId } = useParams<{
@@ -32,21 +36,39 @@ const PlanDetail = () => {
 
   const [category, setCategory] = useState<BudgetCategory | "all">("all");
 
-  const budgets = useRecoilValue(budgetDemoAtom);
+  // const budgets = useRecoilValue(budgetDemoAtom);
 
   const [openCreateModal, setCrateModal] = useState(false);
 
-  useEffect(() => {
-    (async () => {
-      const loadedBudgetItems = await getOrCreateBudgetItem();
-      setBudgetItems(loadedBudgetItems);
-    })();
-  }, [budgetItems]);
+
+  useIonViewDidEnter(() => {
+    getBudgetItems()
+  }, [budgetItems])
+
+
+  // useEffect(() => {
+  //   (async () => {
+  //     const loadedBudgetItems = await getOrCreateAppDBCollectionList<BudgetItem>(BUDGET_ITEMS);
+  //     setBudgetItems(loadedBudgetItems);
+  //   })();
+  // }, [budgetItems]);
+
+  async function getBudgetItems() {
+    const loadedBudgetItems = await getOrCreateAppDBCollectionList<BudgetItem>(BUDGET_ITEMS);
+    setBudgetItems(loadedBudgetItems);
+  }
+
+  function handleRefresh(event: CustomEvent<RefresherEventDetail>) {
+    setTimeout(() => {
+      getBudgetItems()
+      event.detail.complete();
+    }, 3000);
+  }
 
   return (
     <IonPage>
       <IonHeader className="ion-no-border">
-        <IonToolbar color={"primary"}>
+        <IonToolbar color={"primary"} className="pe-3">
           <IonButtons slot="start">
             <IonBackButton defaultHref="/budgets" />
           </IonButtons>
@@ -61,6 +83,10 @@ const PlanDetail = () => {
       </IonHeader>
 
       <IonContent className="">
+        <IonRefresher slot="fixed" onIonRefresh={handleRefresh}>
+          <IonRefresherContent></IonRefresherContent>
+        </IonRefresher>
+
         <section className="ion-margin-top ion-text-center">
           <IonTitle></IonTitle>
         </section>
@@ -69,7 +95,7 @@ const PlanDetail = () => {
         <IonList lines="none" className="ion-margin-top">
           {budgetItems.filter(item => item.budget === budgetId).map((item) => (
             <>
-              {item.category === category  ? (
+              {item.category === category ? (
                 <BudgetPlanItem
                   amount={item.amount}
                   category={item.category}
@@ -94,7 +120,7 @@ const PlanDetail = () => {
 
         {/* ========================= [Add Budget Item Modal Start] ================================= */}
         <section className="modal">
-          <CreatePlanMdal isOpen={openCreateModal} setIsOpen={setCrateModal} budgetId={budgetId} />
+          <CreatePlanModal isOpen={openCreateModal} setIsOpen={setCrateModal} budgetId={budgetId} />
         </section>
         {/* ========================= [Add Budget Item Modal Stop] ================================= */}
       </IonContent>
@@ -102,19 +128,19 @@ const PlanDetail = () => {
       <IonFooter>
         <IonToolbar>
           <IonChip color={"primary"} onClick={() => setCategory("all")}>
-            All
+            <small>All</small>
           </IonChip>
           <IonChip color={"danger"} onClick={() => setCategory("urgent")}>
-            Urgent
+            <small>Urgent</small>
           </IonChip>
           <IonChip color={"tertiary"} onClick={() => setCategory("needed")}>
-            Needed
+            <small>Needed</small>
           </IonChip>
           <IonChip color={"secondary"} onClick={() => setCategory("important")}>
-            Important
+            <small>Important</small>
           </IonChip>
           <IonChip color={"dark"} onClick={() => setCategory("whishlist")}>
-            Whistlist
+            <small>Whistlist</small>
           </IonChip>
         </IonToolbar>
       </IonFooter>

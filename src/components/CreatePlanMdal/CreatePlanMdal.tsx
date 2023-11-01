@@ -10,6 +10,9 @@ import {
   IonSelect,
   IonSelectOption,
   IonButton,
+  IonHeader,
+  IonToolbar,
+  IonTitle,
 } from "@ionic/react";
 import {
   clipboardOutline,
@@ -41,7 +44,7 @@ import { budgetItemReducer } from "../../reducer/reducers/budgetReducers";
 
 
 
-const CreatePlanMdal: React.FC<ModalParam> = ({
+const CreatePlanModal: React.FC<ModalParam> = ({
   isOpen,
   setIsOpen,
   budgetId,
@@ -57,6 +60,8 @@ const CreatePlanMdal: React.FC<ModalParam> = ({
     type: "food",
   });
 
+  
+
   // [functions]----------------------------------------------------------
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -70,11 +75,13 @@ const CreatePlanMdal: React.FC<ModalParam> = ({
       budget: budgetId,
       is_complete: false,
     };
-
+    
     const budgetItems = (await getSaveData(BUDGET_ITEMS)) as BudgetItem[];
-    const currentBudgetItems = [...budgetItems, newBudgetItem];
-    saveData(BUDGET_ITEMS, currentBudgetItems);
-    setBudgetItems(currentBudgetItems);
+    const newBudgetItems = [...budgetItems, newBudgetItem];
+    console.log("🚀 ~ file: CreatePlanMdal.tsx:77 ~ handleSubmit ~ newBudgetItems:", newBudgetItems)
+    
+    saveData(BUDGET_ITEMS, newBudgetItems);
+    setBudgetItems(newBudgetItems);
 
     setIsOpen(false);
   }
@@ -82,15 +89,15 @@ const CreatePlanMdal: React.FC<ModalParam> = ({
   return (
     <IonModal
       isOpen={isOpen}
-      initialBreakpoint={0.5}
-      breakpoints={[0.5, 0.7, 0.9, 1]}
+      initialBreakpoint={0.9}
       onDidDismiss={() => setIsOpen(false)}
     >
+      <IonHeader>
+        <IonToolbar>
+          <IonTitle>Add Plan</IonTitle>
+        </IonToolbar>
+      </IonHeader>
       <IonContent className="ion-padding">
-        <section>
-          <IonText className="fw-strong">Add Plan</IonText>
-          <hr />
-        </section>
 
         <form onSubmit={handleSubmit}>
           {/* Title */}
@@ -248,4 +255,4 @@ const CreatePlanMdal: React.FC<ModalParam> = ({
   );
 };
 
-export default CreatePlanMdal;
+export default CreatePlanModal;
